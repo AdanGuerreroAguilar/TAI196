@@ -7,7 +7,10 @@ app = FastAPI(
     version='1.0.0'
 )
 
-tareas = []
+tareas = [{"id":1,"nombre":"tarea2"},
+          {"id":2,"nombre":"tarea1"},
+          {"id":3,"nombre":"tarea3"}
+          ]
 contador_id = 1
 
 @app.get('/', tags=['Inicio'])
