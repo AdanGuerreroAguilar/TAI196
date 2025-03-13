@@ -7,6 +7,7 @@ class modelUsuario(BaseModel):
     edad:int = Field(..., gt=0, le=130, description="La edad debe ser mayor a 0 y menor a 130")
     correo:str = Field(..., regex=r'^[\w\.-]+@[\w\.-]+\.\w+$', description="Correo válido", example="usuario@example.com")
 
-class modelAuth(BaseModel):
+class modelAuth(BaseModel):    
     correo: EmailStr 
     passw:str =Field(..., min_length=8,strip_whitespace=True, description="Contraseña minimo 8 caracteres")
+
