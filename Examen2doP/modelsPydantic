@@ -1,0 +1,9 @@
+from pydantic import BaseModel, Field
+
+#modelo para validación de datos
+class modelEnvios(BaseModel):
+    CP:str = Field(..., min_length=5, description="El CP debe contener 5 digitos")
+    Destino:str = Field(..., min_length=6, description="El destino debe contener al menos 6 caracteres")
+    Peso:int = Field(..., min_length=0, max_length=500, description="El peso debe ser un valor entero entre 0 y 500")
+
+
