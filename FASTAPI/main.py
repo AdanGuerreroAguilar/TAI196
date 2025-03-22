@@ -4,11 +4,17 @@ from typing import Optional, List
 from modelsPydantic import modelUsuario, modelAuth
 from tokenGen import createToken
 from middlewares import BearerJWT
+from DB.conexion import Session, engine, Base
+from models.modelsDB import User
+
 
 app = FastAPI(
     title="Mi primer API",
     description="Adan Guerrero Aguilar",
     version="1.0.1")
+
+#Levantamiento de tablas en sqlite
+Base.metadata.create_all(bind=engine)
 
 # Base de datos simulada con objetos modelUsuario
 usuarios: List[modelUsuario] = [
@@ -40,13 +46,21 @@ def consultar_todos():
 
 # Endpoint para agregar un usuario
 @app.post("/usuarios/", response_model=modelUsuario, tags=["Operaciones CRUD"])
-def agregar_usuario(usuarionuevo: modelUsuario):
-    for usr in usuarios:
-        if usr.id == usuarionuevo.id:
-            raise HTTPException(status_code=400, detail="El ID ya está registrado")
+def Agregar_Usuario(usuarionuevo: modelUsuario):
+   db = Session()
+   try:
+       db.add(User(**usuarionuevo.model_dump()))
+       db.commit()
+       return JSONResponse(status_code=201, content={"mensaje": "Usuario agregado correctamente", 
+                                                     "usuario": usuarionuevo.model_dump()})
+       
+   except Exception as e:
+       db.rollback()
+       return JSONResponse(status_code=500, content={"mensaje": f"Error al agregar usuario","Exception": str(e)})
 
-    usuarios.append(usuarionuevo)  # Se agrega correctamente como objeto modelUsuario
-    return usuarionuevo
+   finally:
+        db.close()
+    
 
 # Endpoint para actualizar un usuario
 @app.put("/usuarios/{id}", response_model=modelUsuario, tags=["Operaciones CRUD"])
