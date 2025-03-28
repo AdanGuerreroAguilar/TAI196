@@ -40,9 +40,9 @@ def login(autorizado:modelAuth):
 
 
 # Endpoint para consultar todos los usuarios
-@app.get("/usuarios", dependencies=[Depends(BearerJWT())] response_model=List[modelUsuario], tags=["Operaciones CRUD"])
-def consultar_todos():
-    return usuarios
+@app.get("/usuarios", tags=["Operaciones CRUD"])
+def obtener_usuarios():
+
 
 # Endpoint para agregar un usuario
 @app.post("/usuarios/", response_model=modelUsuario, tags=["Operaciones CRUD"])
